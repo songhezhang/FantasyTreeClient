@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="copyConfigFilesForAtomDSOnTomcatR2M"  >
+<target name="copyConfigFilesForAtomDSOnTomcatR2M">
+  <delete dir="src/main/resources/META-INF"/>
+  <delete dir="src/main/webapp/WEB-INF"/>
+  <echo message="Copying config files for Atom on Tomcat for R2M local test"/>
+  <copy todir="src/main/resources/META-INF">
+    <fileset dir="configureAtomDS/Building Scripts/AtomDSOnTomcat/common/resources/META-INF/">
+      <include name="orm.xml"/>
+      <include name="persistence.xml"/>
+    </fileset>
+  </copy>
+  <copy todir="src/main/resources/META-INF/spring">
+    <fileset dir="configureAtomDS/Building Scripts/AtomDSOnTomcat/r2m/resources/META-INF/spring">
+      <include name="applicationContext.xml"/>
+    </fileset>
+  </copy>
+  <copy todir="src/main/webapp/WEB-INF">
+    <fileset dir="configureAtomDS/Building Scripts/AtomDSOnTomcat/common/webapp/WEB-INF">
+      <include name="web.xml"/>
+      <include name="sun-jaxws.xml"/>
+    </fileset>
+  </copy>
+  <copy todir="src/main/webapp/WEB-INF/classes">
+    <fileset dir="configureAtomDS/Building Scripts/AtomDSOnTomcat/r2m/webapp/WEB-INF/classes">
+      <include name="icom-home.properties"/>
+      <include name="ldap.properties"/>
+    </fileset>
+  </copy>
+  <copy todir="src/main/webapp/WEB-INF/lib">
+    <fileset dir="configureAtomDS/Building Scripts/AtomDSOnTomcat/common/webapp/WEB-INF/lib">
+      <include name="webservices-api.jar"/>
+      <include name="webservices-extra-api.jar"/>
+      <include name="webservices-extra.jar"/>
+      <include name="webservices-rt.jar"/>
+      <include name="webservices-tools.jar"/>
+    </fileset>
+  </copy>
+  <copy todir="src/main/resources/META-INF" file="configureAtomDS/Building Scripts/AtomDSOnTomcat/common/resources/log4j.properties" tofile="src/main/resources/META-INF/log4j.properties">
+    <fileset dir="configureAtomDS/Building Scripts/AtomDSOnTomcat/common/resources/META-INF/">
+      <include name="orm.xml"/>
+      <include name="persistence.xml"/>
+    </fileset>
+  </copy>
+  <property location="C:\Users\szhang.OFFICE\Downloads\apache-cxf-3.0.1" name="cxf.home"/>
+  <path id="cxf.classpath">
+    <fileset dir="${cxf.home}\lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+  <java fork="true" classname="org.apache.cxf.tools.wsdlto.WSDLToJava">
+    <arg value="-client"/>
+    <arg value="-d"/>
+    <arg value="src/main/java"/>
+    <arg value="-compile"/>
+    <arg value="-classdir"/>
+    <arg value="target/classes"/>
+    <arg value="-bareMethods"/>
+    <arg value="https://api-vision-lab.ikeacommunications.se/fantasytree/cxf/TreeManagerService?wsdl"/>
+    <classpath>
+      <path refid="cxf.classpath"/>
+    </classpath>
+  </java>
+</target>
+</project>
